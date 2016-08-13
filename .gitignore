@@ -13,3 +13,4 @@ hs_err_pid*
 
 # everything under bin (build artefacts)
 bin/*
+/bin/

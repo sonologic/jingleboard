@@ -15,17 +15,17 @@ import javax.swing.SwingUtilities;
 public class ButtonMouseListener extends MouseAdapter {
 
 	private Context context;
-	private int tabIndex;
 	private int sampleIndex;
+	private Deck deck;
 
 	/**
 	 * 
 	 */
-	public ButtonMouseListener(Context context, int tabIndex, int sampleIndex) {
+	public ButtonMouseListener(Context context, Deck deck, int sampleIndex) {
 		super();
 		
 		this.context = context;
-		this.tabIndex = tabIndex;
+		this.deck = deck;
 		this.sampleIndex = sampleIndex;
 	}
 
@@ -34,7 +34,7 @@ public class ButtonMouseListener extends MouseAdapter {
 		super.mouseClicked(e);
 		
 		if(SwingUtilities.isRightMouseButton(e)) {
-			context.sampleConfigurationFrame.configureSample(tabIndex, sampleIndex);
+			context.sampleConfigurationFrame.configureSample(deck, sampleIndex);
 		}
 		if(SwingUtilities.isLeftMouseButton(e)) {
 			

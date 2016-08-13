@@ -18,6 +18,7 @@ public class Sample extends Thread {
     private SourceDataLine sourceLine;
     private AudioInputStream sample;
     File file;
+    private String filename="";
     private AudioInputStream raw;
     private AudioFormat decodedFormat;
     private boolean loop=false;
@@ -25,7 +26,8 @@ public class Sample extends Thread {
     private boolean stop=false;
 
     public Sample(String filename) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        this(new File(filename));
+    	this(new File(filename));
+    	this.filename = filename;
     }
 
     public Sample(File sampleFile) throws UnsupportedAudioFileException, IOException, LineUnavailableException {

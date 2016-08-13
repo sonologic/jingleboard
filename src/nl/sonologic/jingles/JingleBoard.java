@@ -5,6 +5,7 @@ package nl.sonologic.jingles;
 
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Panel;
@@ -12,6 +13,8 @@ import java.awt.Panel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * @author gmc
@@ -19,7 +22,7 @@ import javax.swing.JTabbedPane;
  */
 public class JingleBoard extends JFrame {
 
-	private Context context = new Context();
+	private Context context = new Context(this);
 
 	/**
 	 * 
@@ -39,26 +42,19 @@ public class JingleBoard extends JFrame {
 		
 		Container pane = getContentPane();
 		
+		
+		
 		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.setFont(context.buttonFont);
 		
 		for(int i=0;i<3;i++) {
-			Container panel = new Panel();
-			panel.setLayout(new GridLayout(config.getGridWidth(),config.getGridHeight()));
-			tabbedPane.addTab("tab"+Integer.toString(i), panel);
-			
-			for(int j=0;j<config.getGridWidth();j++) {
-				for(int k=0;k<config.getGridHeight();k++) {
-					int sampleIndex = (j*config.getGridHeight())+k+1;
-					JButton button = new JButton(Integer.toString(sampleIndex));
-					
-					button.setSize(100,100);
-					button.setMinimumSize(new Dimension(150,150));
-//					button.setAction(new ButtonAction(context));
-					button.addMouseListener(new ButtonMouseListener(context,i,sampleIndex));
-					panel.add(button);
-				}
-			}
+			Deck d = new Deck(context, "Deck "+Integer.toString(i));
+		
+			d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 80));
+			tabbedPane.addTab(d.getLabel(), d);
 		}
+		
+		
 		
 		pane.add(tabbedPane);
 				

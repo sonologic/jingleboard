@@ -40,7 +40,9 @@ public class Deck extends Panel {
 		height = context.config.getGridHeight();
 		
 		for(int i=0;i<(width*height);i++) {
-			samples.add(new Sample());
+			Sample sample = new Sample();
+			sample.setLabel(Integer.toString(i+1));
+			samples.add(sample);
 		}
 		buildUp();
 	}
@@ -52,8 +54,10 @@ public class Deck extends Panel {
 		
 		for(int j=0;j<width;j++) {
 			for(int k=0;k<height;k++) {
-				int sampleIndex = (j*height)+k+1;
-				JButton button = new JButton(Integer.toString(sampleIndex));
+				int sampleIndex = (j*height)+k;
+				
+				String label = getSample(sampleIndex).getLabel();
+				JButton button = new JButton(label);
 				
 				button.setSize(100,100);
 				button.setMinimumSize(new Dimension(150,150));
@@ -62,6 +66,9 @@ public class Deck extends Panel {
 				add(button);
 			}
 		}
+		
+		validate();
+		repaint();
 	}
 
 	public String getLabel() {

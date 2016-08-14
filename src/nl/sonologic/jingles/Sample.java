@@ -19,6 +19,7 @@ public class Sample extends Thread {
     private AudioInputStream sample;
     File file;
     private String filename="";
+    private String label="Sample";
     private AudioInputStream raw;
     private AudioFormat decodedFormat;
     private boolean loaded=false;
@@ -155,5 +156,12 @@ public class Sample extends Thread {
     public synchronized boolean playing() {
         return playing;
     }
-    
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
 }

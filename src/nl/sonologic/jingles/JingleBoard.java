@@ -48,8 +48,6 @@ public class JingleBoard extends JFrame {
 			context.decks.add(d);
 		}
 		
-		
-		
 		pane.add(tabbedPane);
 				
 		pack();

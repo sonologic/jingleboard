@@ -11,7 +11,6 @@ import java.util.Vector;
  *
  */
 public class Context {
-
 	public Configuration config;
 	public SampleConfigurationFrame sampleConfigurationFrame;
 

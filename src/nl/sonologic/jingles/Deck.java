@@ -4,11 +4,13 @@
 package nl.sonologic.jingles;
 
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Panel;
+import java.io.IOException;
 import java.util.Vector;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 
 /**
@@ -37,6 +39,9 @@ public class Deck extends Panel {
 		width = context.config.getGridWidth();
 		height = context.config.getGridHeight();
 		
+		for(int i=0;i<(width*height);i++) {
+			samples.add(new Sample());
+		}
 		buildUp();
 	}
 
@@ -85,6 +90,13 @@ public class Deck extends Panel {
 		buildUp();
 	}
 
+	public Sample getSample(int i) {
+		return samples.get(i);
+	}
 	
+	public void setSampleFilename(int i, String filename) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
+		Sample sample = samples.get(i);
+		sample.setFilename(filename);
+	}
 
 }

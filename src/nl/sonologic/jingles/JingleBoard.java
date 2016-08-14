@@ -4,17 +4,11 @@
 package nl.sonologic.jingles;
 
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.HeadlessException;
-import java.awt.Panel;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * @author gmc
@@ -36,8 +30,6 @@ public class JingleBoard extends JFrame {
 	public JingleBoard() throws HeadlessException {
 		System.out.println("Initializing");
 		
-		Configuration config = context.config;
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Container pane = getContentPane();
@@ -52,6 +44,8 @@ public class JingleBoard extends JFrame {
 		
 			d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 80));
 			tabbedPane.addTab(d.getLabel(), d);
+			
+			context.decks.add(d);
 		}
 		
 		
@@ -65,7 +59,7 @@ public class JingleBoard extends JFrame {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		JingleBoard jingleboard = new JingleBoard();
+		new JingleBoard();
 	}
 
 }

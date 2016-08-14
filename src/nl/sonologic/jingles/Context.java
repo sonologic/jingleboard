@@ -16,7 +16,9 @@ public class Context {
 	public SampleConfigurationFrame sampleConfigurationFrame;
 
 	public Vector<Vector<Sample>> samples = new Vector<Vector<Sample>>();
-	private JingleBoard board;
+	public JingleBoard board;
+	
+	public Vector<Deck> decks = new Vector<Deck>();
 	
 	public Font buttonFont = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
 	public Font configFont = new Font(Font.SANS_SERIF, Font.PLAIN, 30);
@@ -28,7 +30,4 @@ public class Context {
 		this.board = board;
 		this.sampleConfigurationFrame = new SampleConfigurationFrame(this);
 	}
-	
-	
-
 }

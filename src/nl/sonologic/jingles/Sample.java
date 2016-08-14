@@ -21,16 +21,34 @@ public class Sample extends Thread {
     private String filename="";
     private AudioInputStream raw;
     private AudioFormat decodedFormat;
+    private boolean loaded=false;
+    private boolean playing=false;
     private boolean loop=false;
     private boolean rewind=false;
     private boolean stop=false;
 
-    public Sample(String filename) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-    	this(new File(filename));
-    	this.filename = filename;
+    public Sample() {
+    	super();
     }
+    
+    public Sample(String filename) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    	super();
+    	this.filename = filename;
+    	loadFile();
+    }
+    
+    public String getFilename() {
+		return filename;
+	}
 
-    public Sample(File sampleFile) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+	public void setFilename(String filename) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
+		stopPlaying();
+		this.filename = filename;
+		loadFile();
+	}
+
+	private synchronized void loadFile() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+		File sampleFile = new File(filename);
         raw=AudioSystem.getAudioInputStream(sampleFile);
         file=sampleFile;
 
@@ -53,6 +71,7 @@ public class Sample extends Thread {
         
         System.out.println(sample.getFormat().toString());
         
+        loaded = true;
     }
     
     public void run() {
@@ -72,6 +91,8 @@ public class Sample extends Thread {
         byte[] b = new byte[512];
         int numread;
         boolean first=true;
+        
+        playing = true;
         
         while(first || loop) {
             first=false;
@@ -94,7 +115,10 @@ public class Sample extends Thread {
             if(!stop) sourceLine.drain();
             if(loop) rewind();
         }
-        sourceLine.drain();     
+        
+        sourceLine.drain();
+        
+        playing = false;
     }
     
     public synchronized void play() throws InterruptedException {
@@ -106,29 +130,30 @@ public class Sample extends Thread {
         }
     }
     
-    public void pause() {
+    public synchronized void pause() {
         //this.clip.stop();
     }
     
-    public void rewind() {
+    public synchronized void rewind() {
         this.rewind=true;
     }
     
-    public void stopPlaying() {
+    public synchronized void stopPlaying() throws InterruptedException {
+    	this.loop=false;
         this.stop=true;
+        if(this.isAlive()) join();
     }
     
     public void loop() {
         loop(true);
     }
     
-    public void loop(boolean loop) {
-        this.loop=loop;        
+    public synchronized void loop(boolean loop) {
+        this.loop=loop;
     }
     
-    public boolean playing() {
-        //return this.clip.isRunning();
-        return true;
+    public synchronized boolean playing() {
+        return playing;
     }
     
 }

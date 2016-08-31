@@ -1,11 +1,15 @@
 /**
- * 
+ *
  */
 package nl.sonologic.jingles;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.SwingUtilities;
 
 /**
@@ -19,11 +23,11 @@ public class ButtonMouseListener extends MouseAdapter {
 	private Deck deck;
 
 	/**
-	 * 
+	 *
 	 */
 	public ButtonMouseListener(Context context, Deck deck, int sampleIndex) {
 		super();
-		
+
 		this.context = context;
 		this.deck = deck;
 		this.sampleIndex = sampleIndex;
@@ -32,17 +36,35 @@ public class ButtonMouseListener extends MouseAdapter {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
-		
-		if(SwingUtilities.isRightMouseButton(e)) {
+
+		if (SwingUtilities.isRightMouseButton(e)) {
 			context.sampleConfigurationFrame.configureSample(deck, sampleIndex);
 		}
-		if(SwingUtilities.isLeftMouseButton(e)) {
-			
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			Sample sample = deck.getSample(sampleIndex);
+
+			if ((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
+				sample.stop();
+			} else {
+				try {
+					sample.play((e.getModifiers() & ActionEvent.CTRL_MASK) != 0);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (UnsupportedAudioFileException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (LineUnavailableException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 		}
-		
+
 		System.out.println(e);
 	}
-	
-	
 
 }

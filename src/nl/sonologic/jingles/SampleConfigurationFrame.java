@@ -60,24 +60,10 @@ public class SampleConfigurationFrame extends JFrame {
 				frame.fileNameTextField.setText(file.getAbsolutePath());
 				statusLabel.setText("Loading sample...");
 				
-				boolean failed = false;
-				try {
-					frame.getSample().setFilename(frame.getFilename());
-				} catch (UnsupportedAudioFileException e1) {
-					statusLabel.setText("Error: Unsupported audio format");
-					failed = true;
-				} catch (IOException e1) {
-					statusLabel.setText("Error: IO error (unable to read file)");
-					failed = true;
-				} catch (LineUnavailableException e1) {
-					statusLabel.setText("Error: line unavailable");
-					failed = true;
-				} catch (InterruptedException e1) {
-					statusLabel.setText("Error: interrupted, try again");
-					failed = true;
-				}
-				if(!failed)
-					statusLabel.setText("Sample loaded");
+				frame.getSample().setFilename(frame.getFilename());
+				
+				// TODO validate file format and all..
+				statusLabel.setText("Sample loaded");
 			}
 		}
 	}
@@ -110,8 +96,12 @@ public class SampleConfigurationFrame extends JFrame {
 				sample.setLabel(label);
 				frame.getDeck().buildUp();
 			}
+			
+			//frame.getContext().saveConfig();
+			//String s = frame.getContext().generateConfig();
+			//System.out.println(frame.getContext().generateConfig());
+			//frame.getContext().loadConfig(s);
 		}
-
 	}
 	
 	public SampleConfigurationFrame(Context context) throws HeadlessException {
@@ -156,7 +146,7 @@ public class SampleConfigurationFrame extends JFrame {
 		layout.putConstraint(SpringLayout.WEST, labelTextField, 5, SpringLayout.EAST, labelLabel);
 		layout.putConstraint(SpringLayout.NORTH, labelTextField, 5, SpringLayout.SOUTH, fileNameTextField);
 		
-		layout.putConstraint(SpringLayout.NORTH, statusLabel, 5, SpringLayout.SOUTH, fileLabel);
+		layout.putConstraint(SpringLayout.NORTH, statusLabel, 5, SpringLayout.SOUTH, labelLabel);
 
 		add(fileLabel);
 		add(fileNameTextField);
@@ -198,5 +188,9 @@ public class SampleConfigurationFrame extends JFrame {
 	
 	public Deck getDeck() {
 		return deck;
+	}
+	
+	public Context getContext() {
+		return context;
 	}
 }

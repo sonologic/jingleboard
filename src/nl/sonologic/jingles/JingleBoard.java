@@ -6,6 +6,8 @@ package nl.sonologic.jingles;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.HeadlessException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -23,7 +25,6 @@ public class JingleBoard extends JFrame {
 	 */
 	private static final long serialVersionUID = -8394157563937317386L;
 
-	
 	/**
 	 * @throws HeadlessException
 	 */
@@ -32,9 +33,8 @@ public class JingleBoard extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		/*
 		Container pane = getContentPane();
-		
-		
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.setFont(context.buttonFont);
@@ -51,6 +51,17 @@ public class JingleBoard extends JFrame {
 		pane.add(tabbedPane);
 				
 		pack();
+		*/
+		
+		try {
+			context.loadConfig();
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
 		setVisible(true);
 	}
 	/**

@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -44,6 +45,19 @@ public class Deck extends Panel {
 			sample.setLabel(Integer.toString(i+1));
 			samples.add(sample);
 		}
+		buildUp();
+	}
+	
+	public Deck(Context context, String label, ArrayList<Sample> samples) {
+		this.context = context;
+		this.label = label;
+		width = context.config.getGridWidth();
+		height = context.config.getGridHeight();
+
+		for(Sample sample : samples) {
+			this.samples.add(sample);
+		}
+		
 		buildUp();
 	}
 
@@ -99,6 +113,10 @@ public class Deck extends Panel {
 
 	public Sample getSample(int i) {
 		return samples.get(i);
+	}
+	
+	public Vector<Sample> getSamples() {
+		return samples;
 	}
 	
 	public void setSampleFilename(int i, String filename) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {

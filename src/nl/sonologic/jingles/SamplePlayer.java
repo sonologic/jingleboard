@@ -8,69 +8,46 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.*;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  *
  * @author koenmartens
  */
-public class SamplePlayer extends Thread {
+public class SamplePlayer extends SampleFile<Void,Void> {
     private SourceDataLine sourceLine;
-    private AudioInputStream sample;
-    File file;
-    private AudioInputStream raw;
-    private AudioFormat decodedFormat;
     private boolean loop=false;
     private boolean rewind=false;
     private boolean stop=false;
 
-    public SamplePlayer(String filename) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        this(new File(filename));
-    }
 
     public SamplePlayer(File sampleFile) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        raw=AudioSystem.getAudioInputStream(sampleFile);
-        file=sampleFile;
+		super(sampleFile);
 
-        AudioFormat baseFormat = raw.getFormat();
-        decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                                          baseFormat.getSampleRate(),
-                                          16,
-                                          baseFormat.getChannels(),
-                                          baseFormat.getChannels() * 2,
-                                          baseFormat.getSampleRate(),
-                                          false);
-        sample=AudioSystem.getAudioInputStream(decodedFormat,raw);
-        
-        sourceLine = AudioSystem.getSourceDataLine(decodedFormat);        
+        sourceLine = AudioSystem.getSourceDataLine(decodedFormat);
         sourceLine.open(decodedFormat);
-        
+
         System.out.println(sourceLine.getFormat().toString());
-        
-        System.out.println(raw.getFormat());
-        
-        System.out.println(sample.getFormat().toString());
-        
-    }
-    
-    public void run() {
-        stop=false;
-        this.sourceLine.start();
-        try {
-            playloop();
-        } catch (IOException ex) {
-            Logger.getLogger(SamplePlayer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedAudioFileException ex) {
-            Logger.getLogger(SamplePlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.sourceLine.stop();
-    }
-    
-    private void playloop() throws IOException, UnsupportedAudioFileException {
+	}
+
+	//public SamplePlayer(String filename) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+	//	super(filename);
+	//}
+
+	private void playloop() throws IOException, UnsupportedAudioFileException {
         byte[] b = new byte[512];
         int numread;
         boolean first=true;
-        
+
+        System.out.println("Available: " + Integer.toString(sample.available()));
+
+        System.out.println("Frame size: " + Long.toString(decodedFormat.getFrameSize()));
+        System.out.println("Frame rate: " + Float.toString(decodedFormat.getFrameRate()));
+
         while(first || loop) {
             first=false;
             numread=0;
@@ -92,41 +69,56 @@ public class SamplePlayer extends Thread {
             if(!stop) sourceLine.drain();
             if(loop) rewind();
         }
-        sourceLine.drain();     
+        sourceLine.drain();
     }
-    
-    public synchronized void play() throws InterruptedException {
+
+    /*public synchronized void play() throws InterruptedException {
         if(getState()==State.TERMINATED) join();
         if(this.isAlive()) {
             this.rewind();
         } else {
             this.start();
         }
-    }
-    
+    }*/
+
     public void pause() {
         //this.clip.stop();
     }
-    
+
     public void rewind() {
         this.rewind=true;
     }
-    
+
     public void stopPlaying() {
         this.stop=true;
     }
-    
+
     public void loop() {
         loop(true);
     }
-    
+
     public void loop(boolean loop) {
-        this.loop=loop;        
+        this.loop=loop;
     }
-    
+
     public boolean playing() {
         //return this.clip.isRunning();
         return true;
     }
-    
+
+	@Override
+	protected Void doInBackground() throws Exception {
+        stop=false;
+        this.sourceLine.start();
+        try {
+            playloop();
+        } catch (IOException ex) {
+            Logger.getLogger(SamplePlayer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedAudioFileException ex) {
+            Logger.getLogger(SamplePlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.sourceLine.stop();
+		return null;
+	}
+
 }

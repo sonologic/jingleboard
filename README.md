@@ -1,3 +1,10 @@
+Jingleboard
+===========
+
+A bare-bones jingle playout application. Right-click a button to configure
+what sample to play, left-click a button to play the sample, left-click while
+holding shif to interrupt playback of that sample.
+
 Libraries
 =========
 
